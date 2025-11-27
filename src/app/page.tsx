@@ -1,10 +1,6 @@
-import { Button } from "@heroui/button";
+import { redirect } from 'next/navigation';
 
 
 export default function HomePage() {
-    return (
-        <div>
-            <Button>テスト</Button>
-        </div>
-    );
+    redirect("/top");
 }
