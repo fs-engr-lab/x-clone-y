@@ -8,7 +8,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: "Xクローン：Y",
-    description: "X（旧Twitter）とは一切関係のない、非公式の技術学習・デモンストレーションを目的としたクローンアプリであり、公式サービスではありません",
+    description: "X（旧Twitter）とは一切関係のない、非公式の学習およびデモンストレーションを目的としたクローンアプリであり、商用サービスではありません",
 };
 
 export default function RootLayout({ children }: LayoutProps) {
@@ -20,8 +20,8 @@ export default function RootLayout({ children }: LayoutProps) {
                         <header className="p-2 flex flex-col items-center">
                             <div className="text-red-500">注意</div>
                             <div className="text-sm">
-                                <div>本アプリは、Next.jsの実践的な学習のために、X（旧Twitter）の画面デザインや機能をできるだけ模倣していますが、</div>
-                                <div>X（旧Twitter）とは一切関係のない、非公式の技術学習・デモンストレーションを目的としたクローンアプリであり、公式サービスではありません。</div>
+                                <div>本アプリは、Next.jsの実践的な学習のために、X（旧Twitter）の画面デザインや機能を可能な範囲で模倣していますが、</div>
+                                <div>X（旧Twitter）とは一切関係のない、非公式の学習およびデモンストレーションを目的としたクローンアプリであり、商用サービスではありません。</div>
                             </div>
                         </header>
                         <Divider />

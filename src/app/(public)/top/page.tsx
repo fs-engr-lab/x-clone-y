@@ -1,7 +1,7 @@
 import { Divider } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
 
-import { LogoImage } from "@/app/components/common";
+import { LogoImage } from "@/app/components";
 import { SocialLoginButton } from "./SocialLoginButton";
 import { CreateAccountButton } from "./CreateAccountButton";
 import { LoginButton } from "./LoginButton";

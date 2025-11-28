@@ -1,4 +1,4 @@
-import { AppButton, AppButtonProps } from '@/app/components/common'
+import { AppButton, AppButtonProps } from "@/app/components";
 
 
 export const TopButton = ({ children, className, ...others }: AppButtonProps) => {
