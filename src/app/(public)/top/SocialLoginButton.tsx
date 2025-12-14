@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { TopButton } from "./common/TopButton";
+import { AppButton } from "@/app/components";
 
 
 type Props = {
@@ -16,12 +16,14 @@ export const SocialLoginButton = ({ provider, label, icon }: Props) => {
     }
 
     return (
-        <TopButton
+        <AppButton
+            className="w-xs bg-white text-black text-base"
             variant="solid"
+            isDisabled
             startContent={icon}
             onPress={handlePress}
         >
             {label}
-        </TopButton>
+        </AppButton>
     )
 }

@@ -1,4 +1,4 @@
-import { PolicyItem, PolicyItemProps } from "./PolicyItem";
+import { PolicyItem, type PolicyItemProps } from "./PolicyItem";
 
 
 export type PolicyChapterProps = {
@@ -18,7 +18,7 @@ export const PolicyChapter = ({ no, title, description, items }: PolicyChapterPr
                 {description && (<div>
                     {description}
                 </div>)}
-                {items.map((item, index) => typeof item == 'string' ? (
+                {items.map((item, index) => typeof item == "string" ? (
                     <div key={index}>・{item}</div>
                 ) : (
                     <PolicyItem key={item.label} {...item} />

@@ -1,5 +1,5 @@
-'use client';
-import { HeroUIProvider } from "@heroui/react";
+"use client";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 export const Providers = ({ children }: Props) => {
     return (
         <HeroUIProvider>
+            <ToastProvider />
             {children}
         </HeroUIProvider>
     )
