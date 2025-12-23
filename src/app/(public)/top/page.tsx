@@ -1,19 +1,23 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { Divider } from "@heroui/divider";
-import { FcGoogle } from "react-icons/fc";
 
 import { LogoImage } from "@/app/components";
-import { SocialLoginButton } from "./SocialLoginButton";
+import { auth } from "@/server/auth";
 import { CreateAccountButton } from "./CreateAccountButton";
-import { TopLink } from "./TopLink";
 import { LoginButton } from "./LoginButton";
+import { SocialSection } from "./SocialSection";
 import { TopFooter } from "./TopFooter";
+import { TopLink } from "./TopLink";
 
 
-const SOCIAL_LOGIN_INFOS = [
-    { provider: "google", label: "Googleで登録", icon: <FcGoogle size={24} /> },
-]
+export default async function TopPage() {
+    const _headers = await headers();
+    const session = await auth.api.getSession({ headers: _headers });
 
-export default function TopPage() {
+    if (session && session.user.displayUsername && session.user.username) {
+        redirect("/home");
+    }
 
     return (
         <div className="h-full max-w-7xl flex flex-col">
@@ -27,9 +31,7 @@ export default function TopPage() {
                         <div className="mb-2 font-bold text-3xl">
                             今すぐ参加しましょう。
                         </div>
-                        {SOCIAL_LOGIN_INFOS.map(socialLoginIofo => (
-                            <SocialLoginButton key={socialLoginIofo.provider} {...socialLoginIofo} />
-                        ))}
+                        <SocialSection />
                         <Divider />
                         <CreateAccountButton />
                         <div className="w-sm text-xs text-gray-500">

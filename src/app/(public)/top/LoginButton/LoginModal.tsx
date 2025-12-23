@@ -1,49 +1,52 @@
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Form } from "@heroui/form";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalProps } from "@heroui/modal";
 
 import { AppButton, AppInput, AppPasswordInput, LogoImage } from "@/app/components";
 import { authClient } from "@/app/libs/auth-client";
-import { addErrorToast } from "@/app/libs/hero";
-import { TopLink } from '../TopLink';
+import { useAPI } from "@/app/libs/hooks";
 
 
 type Props = Required<Pick<ModalProps, "isOpen" | "onOpenChange">>;
 
 export const LoginModal = ({ isOpen, onOpenChange }: Props) => {
-    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const { isLoading, request } = useAPI(
+        async (formData: FormData) => {
+            const data = Object.fromEntries(formData);
+            const { error } = await authClient.signIn.username({
+                username: data.id as string,
+                password: data.password as string
+            });
 
-        setIsLoading(true);
-        const data = Object.fromEntries(new FormData(event.currentTarget));
-        const { error } = await authClient.signIn.username({
-            username: data.id as string,
-            password: data.password as string
-        });
-        setIsLoading(false);
-
-        if (error) {
-            console.error(error);
-            let description = "予期せぬエラーが発生しました。";
-            switch (error.code) {
-                case "USERNAME_IS_INVALID":
-                case "INVALID_USERNAME_OR_PASSWORD":
-                    description = "ID又はパスワードが不正です";
-                    break;
-                case "EMAIL_NOT_VERIFIED":
-                    description = "メールアドレスが未確認です。再度、ご登録いただいたメールアドレスに確認用メールを送信しました。メール内の確認リンクをクリックして下さい。";
-                    break;
+            let errorMessage = "";
+            if (error) {
+                console.error(error);
+                switch (error.code) {
+                    case "USERNAME_IS_INVALID":
+                    case "INVALID_USERNAME_OR_PASSWORD":
+                        errorMessage = "ID又はパスワードが不正です";
+                        break;
+                    case "EMAIL_NOT_VERIFIED":
+                        errorMessage = "メールアドレスが未確認です。再度、ご登録いただいたメールアドレスに確認用メールを送信しました。メール内の確認リンクをクリックして下さい。";
+                        break;
+                    default:
+                        errorMessage = "予期せぬエラーです。管理者にお問い合わせください。";
+                }
             }
-            addErrorToast("エラーが発生しました", description);
-
-        } else {
+            return errorMessage;
+        },
+        () => {
             onOpenChange(false);
             router.push("/home");
         }
+    );
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        await request(new FormData(event.currentTarget));
     }
 
     return (

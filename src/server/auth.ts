@@ -24,6 +24,12 @@ export const auth = betterAuth({
             await sendVerificationEmail(displayName, user.email, url);
         }
     },
+    socialProviders: {
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+        }
+    }
 });
 
 export type Session = ReturnType<typeof auth.api.getSession> extends Promise<infer T> ? T : never;

@@ -1,8 +1,9 @@
-type User = {
+export type User = {
     id: string;
     name: string;
+    displayName: string;
     email: string;
-    image?: string | null;
+    image?: string;
 }
 
 

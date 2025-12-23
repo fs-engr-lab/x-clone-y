@@ -12,7 +12,7 @@ const ProtectedLayout = async ({ children }: LayoutProps) => {
     const _headers = await headers();
     const session = await auth.api.getSession({ headers: _headers });
 
-    if (!session) {
+    if (!session || !session.user.displayUsername || !session.user.username) {
         redirect("/top");
     }
 

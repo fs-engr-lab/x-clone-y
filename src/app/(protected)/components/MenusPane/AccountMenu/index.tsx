@@ -1,25 +1,21 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { Button } from "@heroui/button";
-import { Listbox, ListboxItem } from "@heroui/listbox";
-import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
-import { User } from "@heroui/user";
+import { Button, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, Spinner, User } from "@heroui/react";
 import { MdOutlineMoreHoriz } from "react-icons/md";
-
 import { selectUser, useAppStore } from "@/app/libs/AppStore";
-import { authClient } from "@/app/libs/auth-client";
+import { useMenusAPI } from "./hooks";
 
 
 export const AccountMenu = () => {
-    const router = useRouter();
-    const user = useAppStore(selectUser);
+    const user = useAppStore(selectUser)!;
+    const { logout } = useMenusAPI(user);
 
-    const handleLogout = async () => {
-        await authClient.signOut();
-        router.push("/");
-    };
-
-    console.log(user);
+    const handleAction = (key: React.Key) => {
+        switch (key) {
+            case "logout":
+                logout.request();
+                break;
+        }
+    }
 
     return (
         <Popover showArrow placement="top">
@@ -38,14 +34,17 @@ export const AccountMenu = () => {
                             description: "truncate w-full text-base text-left"
                         }}
                         avatarProps={{ showFallback: true }}
-                        name={user?.name}
+                        name={user?.displayName}
                         description={`@${user?.id}`}
                     />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-2xs">
-                <Listbox aria-label="user-actions">
-                    <ListboxItem key="logout" onPress={handleLogout}>
+                <Listbox aria-label="user-actions" onAction={handleAction}>
+                    <ListboxItem
+                        key="logout"
+                        startContent={logout.isLoading ? <Spinner size="sm" color="white" /> : undefined}
+                    >
                         {`@${user?.id}からログアウト`}
                     </ListboxItem>
                 </Listbox>

@@ -1,51 +1,55 @@
-import { FormEvent, useState } from "react";
-import { Form } from "@heroui/form";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalProps } from "@heroui/modal";
+import { FormEvent } from "react";
+import { Form, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalProps } from "@heroui/react";
 
 import { AppButton, AppInput, LogoImage } from "@/app/components";
-import { IDInput } from "./IDInput";
+import { authClient } from "@/app/libs/auth-client";
+import { addSuccessToast } from "@/app/libs/hero";
+import { useAPI } from "@/app/libs/hooks";
+import { IDInput } from "../../IDInput";
 import { EmailInput } from "./EmailInput";
 import { PasswordInput } from "./PasswordInput";
-import { authClient } from "@/app/libs/auth-client";
-import { addSuccessToast, addErrorToast } from "@/app/libs/hero";
 
 
 type Props = Required<Pick<ModalProps, "isOpen" | "onOpenChange">>;
 
-export const SignUpModal = ({ isOpen, onOpenChange }: Props) => {
-    const [isLoading, setIsLoading] = useState(false);
+export const PasswordSignUpModal = ({ isOpen, onOpenChange }: Props) => {
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const { isLoading, request } = useAPI(
+        async (formData: FormData) => {
+            const data = Object.fromEntries(formData);
+            const { error } = await authClient.signUp.email({
+                name: data.id as string,
+                username: data.id as string,
+                displayUsername: data.username as string,
+                email: data.email as string,
+                password: data.password as string,
+            });
 
-        setIsLoading(true);
-        const data = Object.fromEntries(new FormData(event.currentTarget));
-        const { error } = await authClient.signUp.email({
-            name: data.id as string,
-            username: data.id as string,
-            displayUsername: data.username as string,
-            email: data.email as string,
-            password: data.password as string,
-        });
-        setIsLoading(false);
-
-        if (error) {
-            console.error(error);
-            let description = "予期せぬエラーが発生しています。";
-            switch (error.code) {
-                case "USERNAME_IS_ALREADY_TAKEN_PLEASE_TRY_ANOTHER":
-                    description = "同一のIDが既に使われています。別のIDで登録して下さい。";
-                    break;
+            let errorMessage = "";
+            if (error) {
+                console.error(error);
+                switch (error.code) {
+                    case "USERNAME_IS_ALREADY_TAKEN_PLEASE_TRY_ANOTHER":
+                        errorMessage = "同一のIDが既に使われています。別のIDで登録して下さい。";
+                        break;
+                    default:
+                        errorMessage = "予期せぬエラーです。管理者にお問い合わせください。";
+                }
             }
-            addErrorToast("エラーが発生しました", description);
-
-        } else {
+            return errorMessage;
+        },
+        () => {
             addSuccessToast(
                 "アカウントが作成されました",
                 "ご登録いただいたメールアドレスに確認用メールを送信しました。メール内の「メールアドレスの確認」リンクをクリックして下さい。"
             );
             onOpenChange(false);
         }
+    );
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        await request(new FormData(event.currentTarget));
     }
 
     return (
@@ -68,7 +72,6 @@ export const SignUpModal = ({ isOpen, onOpenChange }: Props) => {
                         <AppButton className="w-lg" isLoading={isLoading} type="submit" variant="solid">
                             作成
                         </AppButton>
-
                     </ModalFooter>
                 </Form>
             </ModalContent>

@@ -10,10 +10,11 @@ export type AppStoreActions = {
 export const createAppStoreActions = (set: StoreSet<AppStore>): AppStoreActions => ({
     setUser: (value) => set({
         user: {
-            id: value.user.name!,
-            name: value.user.displayUsername!,
+            id: value.user.username!,
+            name: value.user.name,
+            displayName: value.user.displayUsername!,
             email: value.user.email,
-            image: value.user.image
+            image: value.user.image ? value.user.image : undefined
         }
     }),
 });

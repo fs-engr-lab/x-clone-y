@@ -1,7 +1,7 @@
 "use client";
 import { useDisclosure } from "@heroui/modal";
 import { AppButton } from "@/app/components";
-import { SignUpModal } from "./SignUpModal";
+import { PasswordSignUpModal } from "./PasswordSignUpModal";
 
 
 export const CreateAccountButton = () => {
@@ -15,7 +15,7 @@ export const CreateAccountButton = () => {
         >
             アカウントを作成
         </AppButton>
-        <SignUpModal
+        <PasswordSignUpModal
             key={isOpen ? "opened" : "closed"}
             isOpen={isOpen}
             onOpenChange={onOpenChange}

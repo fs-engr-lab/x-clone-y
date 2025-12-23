@@ -1,6 +1,7 @@
 {
-  "name": "next-16-project",
+  "name": "x-clone-y",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,6 +15,7 @@
     "@heroui/react": "^2.8.5",
     "@react-email/components": "^1.0.1",
     "better-auth": "^1.4.5",
+    "cookies-next": "^6.1.1",
     "drizzle-orm": "^0.45.0",
     "framer-motion": "^12.23.25",
     "next": "^16.0.7",

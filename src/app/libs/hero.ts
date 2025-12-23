@@ -7,8 +7,8 @@ export const addSuccessToast = (title: string, description?: string) => {
     addToast({ color: "success", title, description, ...COMMON });
 }
 
-export const addErrorToast = (title: string, description?: string) => {
-    addToast({ color: "danger", title, description, ...COMMON });
+export const addErrorToast = (description?: string) => {
+    addToast({ color: "danger", title: "エラーが発生しました", description, ...COMMON });
 }
 
 
